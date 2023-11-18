@@ -17,10 +17,13 @@ test('users can authenticate using the login screen', function () {
 test('users can not authenticate with invalid password', function () {
     $user = User::factory()->create();
 
-    $this->post('/login', [
+    $this->withHeaders([
+        'accept' => 'application/json'
+    ])
+    ->post('/login', [
         'email' => $user->email,
         'password' => 'wrong-password',
-    ]);
+    ])->assertStatus(422);
 
     $this->assertGuest();
 });

@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum'])->group(function() {
+
+    Route::name('user-profile')
+    ->get('/v1/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::name('token-create')
+    ->post('/v1/token/create', function (Request $request) {
+        $token = $request->user()->createToken($request->token_name ?? 'general');
+
+        return ['token' => $token->plainTextToken];
+    });
 });
